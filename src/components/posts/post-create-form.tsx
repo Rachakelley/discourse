@@ -51,7 +51,7 @@ export default function PostCreateForm({ slug }: PostCreateFormProps) {
 							label='Title'
 							labelPlacement='outside'
 							placeholder='Enter a title'
-							isInvalid={!!formState.errors.title}
+							isInvalid={!!formState.errors?.title}
 							errorMessage={formState.errors?.title?.join(', ')}
 						/>
 						<Textarea
@@ -59,12 +59,12 @@ export default function PostCreateForm({ slug }: PostCreateFormProps) {
 							label='Content'
 							labelPlacement='outside'
 							placeholder='Write your post'
-							isInvalid={!!formState.errors.content}
+							isInvalid={!!formState.errors?.content}
 							errorMessage={formState.errors?.content?.join(', ')}
 						/>
 						{formState.errors?._form ? (
 							<div className='p-2 bg-red-200 border border-red-400 rounded text-black'>
-								{formState.errors._form?.join(', ')}
+								{formState.errors?._form?.join(', ')}
 							</div>
 						) : null}
 						<FormButton isLoading={isPending}>Create</FormButton>
