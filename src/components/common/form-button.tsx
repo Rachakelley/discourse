@@ -1,0 +1,21 @@
+'use client';
+
+import { Button } from '@heroui/react';
+
+interface FormButtonProps {
+	children: React.ReactNode;
+	isLoading?: boolean;
+}
+
+export default function FormButton(props: FormButtonProps) {
+	const { children, isLoading } = props;
+
+	return (
+		<Button
+			type='submit'
+			isLoading={isLoading}
+		>
+			{children}
+		</Button>
+	);
+}
