@@ -36,7 +36,7 @@ export default function PostCreateForm({ slug }: PostCreateFormProps) {
 		<Popover placement='left'>
 			<PopoverTrigger>
 				<Button
-					color='primary'
+					color='success'
 					variant='flat'
 				>
 					Create a Post

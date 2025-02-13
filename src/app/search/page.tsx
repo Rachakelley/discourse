@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
-import PostList from '@/components/posts/post-list';
-import { fetchPostsBySearchTerm } from '@/db/queries/posts';
+import { Divider } from '@heroui/divider';
+import SearchTabs from '@/components/search/search-tabs';
 
 interface SearchPageProps {
 	searchParams: Promise<{
@@ -16,9 +16,10 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 	}
 
 	return (
-		<div>
-			Search results for: {term}
-			<PostList fetchData={() => fetchPostsBySearchTerm(term)} />
+		<div className='container mx-auto px-4'>
+			Search results for: <p className='font-bold inline'>{term}</p>
+			<Divider className='my-4' />
+			<SearchTabs term={term} />
 		</div>
 	);
 }

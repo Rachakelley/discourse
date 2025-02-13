@@ -2,17 +2,19 @@ import React, { Suspense } from 'react';
 import Link from 'next/link';
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@heroui/react';
 import HeaderAuth from './header-auth';
-import SearchInput from './search-input';
+import SearchInput from './search/search-input';
+import { LogoIcon } from './common/icons';
 
 export default function Header() {
 	return (
-		<Navbar className='shadow mb-6'>
+		<Navbar className='w-full flex justify-around items-center bg-stone-900 shadow-lg'>
 			<NavbarBrand>
 				<Link
-					className='font-bold'
+					className='font-bold text-neutral-50 flex items-center gap-2 md:gap-4 lg:gap-6'
 					href='/'
 				>
-					Discuss
+					<LogoIcon />
+					Discourse
 				</Link>
 			</NavbarBrand>
 			<NavbarContent justify='center'>

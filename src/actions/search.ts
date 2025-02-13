@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import paths from '@/paths';
 
 export async function search(formData: FormData) {
 	const term = formData.get('term');
@@ -11,6 +12,6 @@ export async function search(formData: FormData) {
 	}
 
 	revalidatePath('/');
-	revalidatePath(`/search`);
-	redirect(`/search?term=${term}`);
+	revalidatePath(paths.searchTerm(term));
+	redirect(paths.searchTerm(term));
 }

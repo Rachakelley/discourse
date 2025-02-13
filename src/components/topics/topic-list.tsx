@@ -1,25 +1,32 @@
-import Link from 'next/link';
-import { Chip } from '@heroui/react';
-import { db } from '@/db';
-import paths from '@/paths';
+import { Topic } from '@prisma/client';
+import { TopicForListDisplay } from '@/db/queries/topics';
+import DetailedTopicList from './detailed-topic-list';
+import SimpleTopicList from './simple-topic-list';
 
-export default async function TopicList() {
-	const topics = await db.topic.findMany();
+interface TopicListProps {
+	variant?: 'chip' | 'list';
+	topics: TopicForListDisplay[] | Topic[];
+}
+
+export default function TopicList({
+	topics,
+	variant = 'list',
+}: TopicListProps) {
+	if (!topics || topics.length === 0) {
+		return <h4>No topics found</h4>;
+	}
+
 	const renderedTopics = topics.map((topic) => {
 		return (
-			<Link
-				key={topic.id}
-				href={paths.topicShow(topic.slug)}
-			>
-				<Chip
-					color='warning'
-					variant='shadow'
-				>
-					{topic.slug}
-				</Chip>
-			</Link>
+			<div key={topic.id}>
+				{variant === 'chip' ? (
+					<SimpleTopicList topic={topic as Topic} />
+				) : (
+					<DetailedTopicList topic={topic as TopicForListDisplay} />
+				)}
+			</div>
 		);
 	});
 
-	return <div className='flex flex-row flex-wrap gap-2'>{renderedTopics}</div>;
+	return <div className='w-full'>{renderedTopics}</div>;
 }

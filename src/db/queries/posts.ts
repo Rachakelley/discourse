@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import type { Post } from '@prisma/client';
 import { db } from '@/db';
 
@@ -7,20 +8,23 @@ export type PostForListDisplay = Post & {
 	_count: { comments: number };
 };
 
-export function fetchPostsBySearchTerm(
-	term: string
-): Promise<PostForListDisplay[]> {
-	return db.post.findMany({
-		where: {
-			OR: [{ title: { contains: term } }, { content: { contains: term } }],
-		},
-		include: {
-			topic: { select: { slug: true } },
-			user: { select: { name: true, image: true } },
-			_count: { select: { comments: true } },
-		},
-	});
-}
+export const fetchPostsBySearchTerm = cache(
+	(term: string): Promise<PostForListDisplay[]> => {
+		return db.post.findMany({
+			where: {
+				OR: [
+					{ title: { contains: term, mode: 'insensitive' } },
+					{ content: { contains: term, mode: 'insensitive' } },
+				],
+			},
+			include: {
+				topic: { select: { slug: true } },
+				user: { select: { name: true, image: true } },
+				_count: { select: { comments: true } },
+			},
+		});
+	}
+);
 
 export function fetchPostsByTopicSlug(
 	slug: string

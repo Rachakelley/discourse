@@ -30,7 +30,7 @@ export default function TopicCreateForm() {
 		<Popover placement='left'>
 			<PopoverTrigger>
 				<Button
-					color='primary'
+					color='success'
 					variant='flat'
 				>
 					Create Topic

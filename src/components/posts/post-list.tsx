@@ -3,12 +3,15 @@ import paths from '@/paths';
 import type { PostForListDisplay } from '@/db/queries/posts';
 
 interface PostListProps {
-	fetchData: () => Promise<PostForListDisplay[]>;
+	posts: PostForListDisplay[];
 }
 
-export default async function PostList({ fetchData }: PostListProps) {
-	const posts = await fetchData();
-	const renderedPosts = posts.map((post) => {
+export default function PostList({ posts }: PostListProps) {
+	if (!posts || posts.length === 0) {
+		return <h4>No posts found</h4>;
+	}
+
+	const renderedPosts = posts?.map((post) => {
 		const topicSlug = post.topic.slug;
 
 		if (!topicSlug) {
@@ -18,7 +21,7 @@ export default async function PostList({ fetchData }: PostListProps) {
 		return (
 			<div
 				key={post.id}
-				className='border rounded p-2'
+				className='flex items-center p-4 bg-white rounded-lg shadow-md hover:bg-gray-100 transition'
 			>
 				<Link href={paths.postShow(topicSlug, post.id)}>
 					<h3 className='text-lg font-bold'>{post.title}</h3>
@@ -33,6 +36,10 @@ export default async function PostList({ fetchData }: PostListProps) {
 			</div>
 		);
 	});
+
+	if (renderedPosts?.length === 0) {
+		return <h4>No posts found</h4>;
+	}
 
 	return <div className='space-y-2'>{renderedPosts}</div>;
 }
