@@ -1,5 +1,7 @@
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { notFound } from 'next/navigation';
-import { db } from '@/db';
+import { fetchPostsBySlugAndPostId } from '@/db/queries/posts';
 
 interface PostShowProps {
 	slug: string;
@@ -7,25 +9,27 @@ interface PostShowProps {
 }
 
 export default async function PostShow({ slug, postId }: PostShowProps) {
-	await new Promise((resolve) => setTimeout(resolve, 2500));
-	const post = await db.post.findFirst({
-		where: {
-			id: postId,
-			topic: { slug },
-		},
-		include: {
-			topic: true,
-		},
-	});
+	const post = await fetchPostsBySlugAndPostId(slug, postId);
 
 	if (!post) {
 		notFound();
 	}
 
 	return (
-		<div className='m-4'>
-			<h1 className='text-2xl font-bold my-2'>{post.title}</h1>
-			<p className='p-4 border rounded'>{post.content}</p>
-		</div>
+    <div className='m-4'>
+      <h1 className='text-2xl font-bold my-2 break-words overflow-wrap-anywhere'>
+        {post.title}
+      </h1>
+      <div className='p-4 border rounded prose max-w-none'>
+        <ReactMarkdown 
+          remarkPlugins={[remarkGfm]}
+          components={{
+            p: ({ children }) => <p className="whitespace-pre-wrap">{children}</p>
+          }}
+        >
+          {post.content}
+        </ReactMarkdown>
+      </div>
+    </div>
 	);
 }

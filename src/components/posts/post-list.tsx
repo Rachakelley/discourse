@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Button } from '@heroui/react';
 import paths from '@/paths';
 import type { PostForListDisplay } from '@/db/queries/posts';
 
@@ -19,12 +20,13 @@ export default function PostList({ posts }: PostListProps) {
 		}
 
 		return (
-			<div
+			<Link
+				href={paths.postShow(topicSlug, post.id)}
 				key={post.id}
-				className='flex items-center p-4 bg-white rounded-lg shadow-md hover:bg-gray-100 transition'
+				className='flex items-center p-4 hover:bg-gray-100 transition border rounded border-gray-200'
 			>
-				<Link href={paths.postShow(topicSlug, post.id)}>
-					<h3 className='text-lg font-bold'>{post.title}</h3>
+				<div>
+					<h3 className='text-md font-bold'>{post.title}</h3>
 					<div className='flex flex-row gap-8'>
 						<p className='text-xs text-gray-400'>By {post.user.name}</p>
 						<p className='text-xs text-gray-400'>
@@ -32,8 +34,8 @@ export default function PostList({ posts }: PostListProps) {
 							{post._count.comments === 1 ? 'comment' : 'comments'}
 						</p>
 					</div>
-				</Link>
-			</div>
+				</div>
+			</Link>
 		);
 	});
 
@@ -41,5 +43,10 @@ export default function PostList({ posts }: PostListProps) {
 		return <h4>No posts found</h4>;
 	}
 
-	return <div className='space-y-2'>{renderedPosts}</div>;
+	return (
+		<div className='space-y-2'>
+			{renderedPosts}
+			<Button>Load More</Button>
+		</div>
+		);
 }

@@ -1,6 +1,8 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import CommentCreateForm from '@/components/comments/comment-create-form';
 import { fetchCommentsByPostId } from '@/db/queries/comments';
+import paths from '@/paths';
 
 interface CommentShowProps {
 	commentId: string;
@@ -32,13 +34,15 @@ export default async function CommentShow({
 	return (
 		<div className='p-4 border mt-2 mb-1'>
 			<div className='flex gap-3'>
-				<Image
-					src={comment.user.image || ''}
-					alt='user image'
-					width={40}
-					height={40}
-					className='w-10 h-10 rounded-full'
-				/>
+				<Link href={paths.userProfileShow(comment.user.id)}>
+					<Image
+						src={comment.user.image || ''}
+						alt='user image'
+						width={40}
+						height={40}
+        		className='w-10 h-10 rounded-full hover:opacity-80 hover:shadow-lg transition duration-200'
+					/>
+				</Link>
 				<div className='flex-1 space-y-3'>
 					<p className='text-sm font-medium text-gray-500'>
 						{comment.user.name}

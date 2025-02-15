@@ -33,3 +33,24 @@ export const fetchUsersByTerm = cache(
 		});
 	}
 );
+
+export interface UserForProfileDisplay {
+	id: string;
+	email: string | null;
+	name: string | null;
+	image: string | null;
+}
+
+export const fetchUserById = async (
+	userId: string
+): Promise<UserForProfileDisplay | null> => {
+	return await db.user.findUnique({
+		where: { id: userId },
+		select: {
+			id: true,
+			email: true,
+			name: true,
+			image: true,
+		},
+	});
+};

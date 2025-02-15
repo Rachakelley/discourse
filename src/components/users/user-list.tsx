@@ -1,5 +1,6 @@
 import { Avatar, Link } from '@heroui/react';
 import { FaceSmileIcon } from '@heroicons/react/24/outline';
+import paths from '@/paths';
 import { UserForListDisplay } from '@/db/queries/users';
 
 interface UserListProps {
@@ -14,8 +15,8 @@ export default function UserList({ users }: UserListProps) {
 	const renderedUsers = users.map((user) => {
 		return (
 			<Link
-				className='flex items-center p-4 my-2 bg-white rounded-lg shadow-md hover:bg-gray-100 transition'
-				href={'/'}
+				className='flex items-center p-4 my-2 bg-white rounded-lg shadow-sm hover:bg-gray-100 transition'
+				href={paths.userProfileShow(user?.id)}
 				key={user.id}
 			>
 				<Avatar

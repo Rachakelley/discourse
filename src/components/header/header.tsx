@@ -2,8 +2,8 @@ import React, { Suspense } from 'react';
 import Link from 'next/link';
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@heroui/react';
 import HeaderAuth from './header-auth';
-import SearchInput from './search/search-input';
-import { LogoIcon } from './common/icons';
+import SearchInput from '@/components/search/search-input';
+import { LogoIcon } from '@/components/common/icons';
 
 export default function Header() {
 	return (

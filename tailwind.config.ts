@@ -1,5 +1,6 @@
 import type { Config } from 'tailwindcss';
 import { heroui } from '@heroui/react';
+import typography from '@tailwindcss/typography';
 
 export default {
 	content: [
@@ -14,8 +15,18 @@ export default {
 				background: 'var(--background)',
 				foreground: 'var(--foreground)',
 			},
+			fontFamily: {
+				sans: ['Inter', 'Helvetica', 'Arial', 'sans-serif'],
+				system: [
+					'-apple-system',
+					'BlinkMacSystemFont',
+					'Segoe UI',
+					'Roboto',
+					'sans-serif',
+				],
+			},
 		},
 	},
 	darkMode: 'class',
-	plugins: [heroui()],
+	plugins: [heroui(), typography],
 } satisfies Config;

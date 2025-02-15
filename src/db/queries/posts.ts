@@ -8,6 +8,35 @@ export type PostForListDisplay = Post & {
 	_count: { comments: number };
 };
 
+export const fetchPostsBySlugAndPostId = cache(
+	(slug: string, postId: string): Promise<PostForListDisplay | null> => {
+		return db.post.findFirst({
+			where: {
+				id: postId,
+				topic: { slug },
+			},
+			include: {
+				topic: true,
+				user: { select: { name: true } },
+				_count: { select: { comments: true } },
+			},
+		});
+	}
+);
+
+export const fetchPostsByUserId = cache(
+	(userId: string): Promise<PostForListDisplay[]> => {
+		return db.post.findMany({
+			where: { userId },
+			include: {
+				topic: { select: { slug: true } },
+				user: { select: { name: true } },
+				_count: { select: { comments: true } },
+			},
+		});
+	}
+);
+
 export const fetchPostsBySearchTerm = cache(
 	(term: string): Promise<PostForListDisplay[]> => {
 		return db.post.findMany({

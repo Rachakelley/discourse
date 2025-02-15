@@ -14,6 +14,9 @@ const paths = {
 	searchTerm(term: string) {
 		return `/search?term=${term}`;
 	},
+	userProfileShow(userId: string) {
+		return `/users/${userId}`;
+	},
 };
 
 export default paths;

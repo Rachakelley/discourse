@@ -1,13 +1,30 @@
 import { cache } from 'react';
 import { db } from '@/db';
-import { Topic } from '@prisma/client';
 
-export function fetchAllTopics(): Promise<Topic[]> {
-	return db.topic.findMany();
+export function fetchAllTopics(): Promise<TopicForListDisplay[]> {
+	return db.topic.findMany({
+		select: {
+			id: true,
+			createdAt: true,
+			updatedAt: true,
+			slug: true,
+			description: true,
+			_count: {
+				select: {
+					posts: true,
+				},
+			},
+		},
+		orderBy: {
+			slug: 'asc',
+		},
+	});
 }
 
 export interface TopicForListDisplay {
 	id: string;
+	createdAt: Date;
+	updatedAt: Date;
 	slug: string;
 	description: string;
 	_count: { posts: number };
@@ -21,6 +38,8 @@ export const fetchTopicsBySearchTerm = cache(
 			},
 			select: {
 				id: true,
+				createdAt: true,
+				updatedAt: true,
 				slug: true,
 				description: true,
 				_count: { select: { posts: true } },
