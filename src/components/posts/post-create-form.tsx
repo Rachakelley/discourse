@@ -25,7 +25,10 @@ interface PostCreateFormProps {
 	topics?: Topic[];
 }
 
-export default function PostCreateForm({ slug = '', topics = [] }: PostCreateFormProps) {
+export default function PostCreateForm({
+	slug = '',
+	topics = [],
+}: PostCreateFormProps) {
 	const { register } = useForm({
 		defaultValues: {
 			topic: slug,
@@ -37,7 +40,6 @@ export default function PostCreateForm({ slug = '', topics = [] }: PostCreateFor
 	const [formState, action, isPending] = useActionState(actions.createPost, {
 		errors: {},
 	});
-
 
 	function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -69,18 +71,18 @@ export default function PostCreateForm({ slug = '', topics = [] }: PostCreateFor
 							label='Topic'
 							labelPlacement='outside'
 							placeholder='Select a topic'
-							defaultSelectedKeys={[slug]}
+							defaultSelectedKeys={slug ? [slug] : undefined}
 							isInvalid={!!formState.errors?.topic}
 							errorMessage={getFormattedErrors(formState?.errors?.topic)}
 						>
-							{topics?.map((topic) => (
+							{(topic) => (
 								<SelectItem
-									key={`select-${topic.slug}`}
+									key={topic.slug}
 									value={topic.slug}
 								>
 									{topic.slug}
 								</SelectItem>
-							))}
+							)}
 						</Select>
 						<Input
 							{...register('title')}
