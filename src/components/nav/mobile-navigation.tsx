@@ -9,10 +9,21 @@ export default function MobileNavigation() {
   const segments = pathname
     .split('/')
     .filter(Boolean)
-    .map((segment) => ({
-      label: segment.charAt(0).toUpperCase() + segment.slice(1),
-      href: `/${segment}`,
-    }));
+    .reduce<Array<{ label: string; href: string }>>((acc, segment, index, array) => {
+      let href = `${acc.length > 0 ? acc[acc.length - 1].href : ''}/${segment}`;
+
+      // Check if the current segment is 'posts' and the previous segment is under 'topics'
+      if (segment === 'posts' && array[index - 2] === 'topics') {
+        href = `/topics/${array[index - 1]}`;
+      }
+
+      acc.push({
+        label: segment.charAt(0).toUpperCase() + segment.slice(1),
+        href,
+      });
+      return acc;
+    }, []);
+
 
   return (
     <div className='z-50 flex items-center w-full h-14 px-4 fixed md:hidden bg-white border-b border-stone-200 shadow-md'>
@@ -24,7 +35,7 @@ export default function MobileNavigation() {
           <Link href='/'>Home</Link>
         </li>
         {segments.map((segment) => (
-          <li key={segment.href} className='flex items-center gap-2'>
+          <li key={`${segment}-${segment.label}`} className='flex items-center gap-2'>
             <span className='text-gray-400'>/</span>
             <Link href={segment.href}>{segment.label}</Link>
           </li>

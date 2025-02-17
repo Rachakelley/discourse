@@ -1,7 +1,7 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import { useActionState, startTransition, useState } from 'react';
+import { useActionState, startTransition } from 'react';
 import {
 	Button,
 	Form,
@@ -10,13 +10,15 @@ import {
 	Popover,
 	PopoverTrigger,
 	PopoverContent,
+	Select,
+	SelectItem,
 	Tooltip,
 } from '@heroui/react';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { Topic } from '@prisma/client';
 import * as actions from '@/actions';
 import FormButton from '@/components/common/form-button';
-import TopicSelect from '../topics/topic-select';
+import { getFormattedErrors } from '@/utils';
 
 interface PostCreateFormProps {
 	slug?: string;
@@ -24,23 +26,18 @@ interface PostCreateFormProps {
 }
 
 export default function PostCreateForm({ slug = '', topics = [] }: PostCreateFormProps) {
-	const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
-
-	// Update useForm to include register
 	const { register } = useForm({
 		defaultValues: {
+			topic: slug,
 			content: '',
 			title: '',
 		},
 	});
 
-	// For server-side submission
-	const [formState, action, isPending] = useActionState(
-		actions.createPost.bind(null, slug || selectedTopic || ''),
-		{
-			errors: {},
-		}
-	);
+	const [formState, action, isPending] = useActionState(actions.createPost, {
+		errors: {},
+	});
+
 
 	function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -64,18 +61,34 @@ export default function PostCreateForm({ slug = '', topics = [] }: PostCreateFor
 				<Form onSubmit={handleSubmit}>
 					<div className='flex flex-col gap-4 p-4 w-80'>
 						<h3 className='text-lg'>Create a Post</h3>
-						<TopicSelect
-							defaultValue={slug || ''}
-							topics={topics}
-							onSelect={setSelectedTopic}
-						/>
+						<Select
+							{...register('topic')}
+							className='max-w-xs'
+							selectionMode='single'
+							items={topics}
+							label='Topic'
+							labelPlacement='outside'
+							placeholder='Select a topic'
+							defaultSelectedKeys={[slug]}
+							isInvalid={!!formState.errors?.topic}
+							errorMessage={getFormattedErrors(formState?.errors?.topic)}
+						>
+							{topics?.map((topic) => (
+								<SelectItem
+									key={`select-${topic.slug}`}
+									value={topic.slug}
+								>
+									{topic.slug}
+								</SelectItem>
+							))}
+						</Select>
 						<Input
 							{...register('title')}
 							label='Title'
 							labelPlacement='outside'
 							placeholder='Enter a title'
 							isInvalid={!!formState.errors?.title}
-							errorMessage={formState.errors?.title?.join(', ')}
+							errorMessage={getFormattedErrors(formState?.errors?.title)}
 						/>
 						<div>
 							<Textarea
@@ -110,12 +123,12 @@ export default function PostCreateForm({ slug = '', topics = [] }: PostCreateFor
 								labelPlacement='outside'
 								placeholder='Write your post here...'
 								isInvalid={!!formState.errors?.content}
-								errorMessage={formState.errors?.content?.join(', ')}
+								errorMessage={getFormattedErrors(formState?.errors?.content)}
 							/>
 						</div>
 						{formState.errors?._form ? (
 							<div className='p-2 bg-red-200 border border-red-400 rounded text-black'>
-								{formState.errors?._form?.join(', ')}
+								{getFormattedErrors(formState?.errors?._form)}
 							</div>
 						) : null}
 						<FormButton isLoading={isPending}>Create</FormButton>

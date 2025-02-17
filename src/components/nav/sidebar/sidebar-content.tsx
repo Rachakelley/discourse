@@ -56,7 +56,7 @@ export default function SidebarContent({ topics }: SidebarContentProps) {
 				>
 					{topics?.map((topic) => (
 						<ListboxItem
-							key={topic.slug}
+							key={`topic-${topic.slug}`}
 							textValue={topic.slug}
 						>
 							<SidebarTopicItem topic={topic} />

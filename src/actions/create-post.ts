@@ -10,6 +10,7 @@ import paths from '@/paths';
 
 interface CreatePostFormState {
 	errors: {
+		topic?: string[];
 		title?: string[];
 		content?: string[];
 		_form?: string[];
@@ -17,16 +18,24 @@ interface CreatePostFormState {
 }
 
 const createPostSchema = z.object({
-	title: z.string().min(3),
-	content: z.string().min(10).max(10000),
+	topic: z.string().min(1, { message: 'Please select a topic' }),
+	title: z
+		.string()
+		.min(3, { message: 'Title must be at least 3 characters long' }),
+	content: z
+		.string()
+		.min(10, { message: 'Content must be at least 10 characters long' })
+		.max(10000, {
+			message: 'Content must be less than 10,000 characters long',
+		}),
 });
 
 export async function createPost(
-	slug: string,
 	formState: CreatePostFormState,
 	formData: FormData
 ): Promise<CreatePostFormState> {
 	const result = createPostSchema.safeParse({
+		topic: formData.get('topic'),
 		title: formData.get('title'),
 		content: formData.get('content'),
 	});
@@ -47,11 +56,12 @@ export async function createPost(
 		};
 	}
 
-	const topic = await db.topic.findFirst({
-		where: { slug },
+	const selectedTopic = formData.get('topic') as string;
+	const matchedTopic = await db.topic.findFirst({
+		where: { slug: selectedTopic },
 	});
 
-	if (!topic) {
+	if (!matchedTopic) {
 		return {
 			errors: {
 				_form: ['Topic not found'],
@@ -66,7 +76,7 @@ export async function createPost(
 				title: result.data.title,
 				content: result.data.content,
 				userId: session.user.id,
-				topicId: topic.id,
+				topicId: matchedTopic.id,
 			},
 		});
 	} catch (error: unknown) {
@@ -86,6 +96,6 @@ export async function createPost(
 	}
 
 	revalidatePath('/');
-	revalidatePath(paths.topicShow(slug));
-	redirect(paths.postShow(slug, post.id));
+	revalidatePath(paths.topicShow(matchedTopic.slug));
+	redirect(paths.postShow(matchedTopic.slug, post.id));
 }

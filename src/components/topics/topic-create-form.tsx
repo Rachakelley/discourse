@@ -12,6 +12,7 @@ import {
 } from '@heroui/react';
 import * as actions from '@/actions';
 import FormButton from '@/components/common/form-button';
+import { getFormattedErrors } from '@/utils';
 
 export default function TopicCreateForm() {
 	const [formState, action, isPending] = useActionState(actions.createTopic, {
@@ -46,7 +47,7 @@ export default function TopicCreateForm() {
 							labelPlacement='outside'
 							placeholder='Enter a topic'
 							isInvalid={!!formState.errors?.name}
-							errorMessage={formState.errors?.name?.join(', ')}
+							errorMessage={getFormattedErrors(formState?.errors?.name)}
 						/>
 						<Textarea
 							name='description'
@@ -54,11 +55,11 @@ export default function TopicCreateForm() {
 							labelPlacement='outside'
 							placeholder='Describe your topic'
 							isInvalid={!!formState.errors?.description}
-							errorMessage={formState.errors?.description?.join(', ')}
+							errorMessage={getFormattedErrors(formState?.errors?.description)}
 						/>
 						{formState.errors?._form ? (
 							<div className='p-2 bg-red-200 border border-red-400 rounded text-black'>
-								{formState.errors?._form?.join(', ')}
+								{getFormattedErrors(formState.errors?._form)}
 							</div>
 						) : null}
 						<FormButton isLoading={isPending}>Save</FormButton>

@@ -19,11 +19,20 @@ interface CreateTopicFormState {
 const createTopicSchema = z.object({
 	name: z
 		.string()
-		.min(3)
+		.min(3, {
+			message: 'Must contain at least 3 characters',
+		})
 		.regex(/^[a-z-]+$/, {
 			message: 'Must be lowercase letters or dashes without spaces',
 		}),
-	description: z.string().min(10).max(255),
+	description: z
+		.string()
+		.min(10, {
+			message: 'Description must be at least 10 characters',
+		})
+		.max(255, {
+			message: 'Description must be less than 255 characters',
+		}),
 });
 
 export async function createTopic(

@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Textarea, Button } from '@heroui/react';
 import FormButton from '@/components/common/form-button';
 import * as actions from '@/actions';
+import { getFormattedErrors } from '@/utils';
 
 interface CommentCreateFormProps {
 	postId: string;
@@ -45,12 +46,12 @@ export default function CommentCreateForm({
 					label='Reply'
 					placeholder='Enter your comment'
 					isInvalid={!!formState.errors.content}
-					errorMessage={formState.errors.content?.join(', ')}
+					errorMessage={getFormattedErrors(formState?.errors?.content)}
 				/>
 
 				{formState.errors._form ? (
 					<div className='p-2 bg-red-200 border rounded border-red-400'>
-						{formState.errors._form?.join(', ')}
+						{getFormattedErrors(formState?.errors?._form)}
 					</div>
 				) : null}
 
