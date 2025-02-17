@@ -9,11 +9,11 @@ interface PostListProps {
 
 export default function PostList({ posts }: PostListProps) {
 	if (!posts || posts.length === 0) {
-		return <h4>No posts found</h4>;
+		return <h4 className='p-4'>No posts found</h4>;
 	}
 
 	const renderedPosts = posts?.map((post) => {
-		const topicSlug = post.topic.slug;
+		const topicSlug = post?.topic?.slug;
 
 		if (!topicSlug) {
 			throw new Error('Need a slug to link to a post');
@@ -39,14 +39,10 @@ export default function PostList({ posts }: PostListProps) {
 		);
 	});
 
-	if (renderedPosts?.length === 0) {
-		return <h4>No posts found</h4>;
-	}
-
 	return (
 		<div className='space-y-2'>
 			{renderedPosts}
 			<Button>Load More</Button>
 		</div>
-		);
+	);
 }

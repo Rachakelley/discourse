@@ -1,13 +1,27 @@
 'use client';
 
+import { ReactNode } from 'react';
 import { Link, Listbox, ListboxItem, ListboxSection } from '@heroui/react';
 import paths from '@/paths';
-import SidebarTopicItem from './sidebar-topic-item';
 import { TopicForListDisplay } from '@/db/queries/topics';
 
 interface SidebarContentProps {
 	topics: TopicForListDisplay[];
 }
+
+interface ListboxWrapperProps {
+	children: ReactNode;
+}
+
+export const ListboxWrapper = ({ children }: ListboxWrapperProps) => (
+	/* 
+		On small screens less than 768px The navbar is hidden (display: none)
+		On medium screens and larger ≥ 768px The navbar is visible (display: block)
+	*/
+	<div className='w-48 fixed left-0 top-[64px] h-[calc(100vh-64px)] border-r border-stone-200 bg-white hidden md:block'>
+		{children}
+	</div>
+);
 
 export default function SidebarContent({ topics }: SidebarContentProps) {
 	const handleAction = (key: string) => {
@@ -19,33 +33,34 @@ export default function SidebarContent({ topics }: SidebarContentProps) {
 	};
 
 	return (
-		<div className='h-[calc(100vh-64px)]'>
+		<ListboxWrapper>
 			<Listbox
 				aria-label='Navigation'
 				variant='flat'
-				isVirtualized
-				virtualization={{
-					maxListboxHeight: 2000,
-					itemHeight: 40,
-				}}
-				className='p-0 gap-0 divide-y divide-default-300/50 dark:divide-default-100/80 bg-content1 max-w-[300px] overflow-visible shadow-small'
+				className='p-0 gap-0 divide-y divide-default-300/50 bg-content1 max-w-[300px] overflow-visible'
 				itemClasses={{
-					base: 'px-4 py-0 first:rounded-t-medium last:rounded-b-medium rounded-none gap-3 h-12 data-[hover=true]:bg-default-100/80',
+					base: 'pl-4 py-0 first:rounded-t-medium last:rounded-b-medium rounded-none gap-3 data-[hover=true]:bg-default-100/80',
 				}}
 				onAction={(key) => handleAction(key.toString())}
 			>
-				<ListboxSection showDivider>
-					<ListboxItem
-						key='home'
-						textValue='Home'
-					>
-						<Link
-							className='text-black h-full w-full'
-							href={paths.home()}
+				<ListboxSection
+					showDivider
+					items={[{ key: 'home', textValue: 'Home', label: 'Home' }]}
+				>
+					{(item) => (
+						<ListboxItem
+							className='h-12'
+							key={item.key}
+							textValue={item.textValue}
 						>
-							Home
-						</Link>
-					</ListboxItem>
+							<Link
+								className='text-black h-full w-full'
+								href={paths.home()}
+							>
+								{item.label}
+							</Link>
+						</ListboxItem>
+					)}
 				</ListboxSection>
 				<ListboxSection
 					classNames={{
@@ -53,17 +68,34 @@ export default function SidebarContent({ topics }: SidebarContentProps) {
 						divider: 'bg-default-200 dark:bg-default-100',
 					}}
 					title='Topics'
+					items={topics.map((item) => ({
+						key: `topic-${item.slug}`,
+						textValue: item.slug,
+						label: item.slug,
+					}))}
 				>
-					{topics?.map((topic) => (
+					{(item) => (
 						<ListboxItem
-							key={`topic-${topic.slug}`}
-							textValue={topic.slug}
+							key={item.key}
+							textValue={item.textValue}
 						>
-							<SidebarTopicItem topic={topic} />
+							<div
+								key={item.key}
+								className='w-full h-full border-l-2 border-green-500 flex flex-col flex-wrap gap-2 pl-4'
+							>
+								<Link
+									color='foreground'
+									size='sm'
+									href={paths.topicShow(item.label)}
+									className='h-12'
+								>
+									{item.label}
+								</Link>
+							</div>
 						</ListboxItem>
-					))}
+					)}
 				</ListboxSection>
 			</Listbox>
-		</div>
+		</ListboxWrapper>
 	);
 }

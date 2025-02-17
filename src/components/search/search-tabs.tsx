@@ -36,7 +36,9 @@ export default function SearchTabs({
 			<Tabs
 				aria-label='Options'
 				color='success'
-				variant='light'
+				classNames={{
+          cursor: "w-full bg-[#35d0006e]",
+				}}
 				selectedKey={selectedTab}
 				onSelectionChange={(key) => setSelectedTab(key.toString())}
 				className='flex flex-col md:flex-row'

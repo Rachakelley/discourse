@@ -1,29 +1,37 @@
-import { Topic } from '@prisma/client';
+import { Avatar, Link } from '@heroui/react';
+import { CommandLineIcon } from '@heroicons/react/24/outline';
 import { TopicForListDisplay } from '@/db/queries/topics';
-import DetailedTopicList from './detailed-topic-list';
-import SimpleTopicList from './simple-topic-list';
+import paths from '@/paths';
 
 interface TopicListProps {
-	variant?: 'chip' | 'list';
-	topics: TopicForListDisplay[] | Topic[];
+	topics: TopicForListDisplay[];
 }
 
-export default function TopicList({
-	topics,
-	variant = 'list',
-}: TopicListProps) {
+export default function TopicList({ topics }: TopicListProps) {
 	if (!topics || topics.length === 0) {
-		return <h4>No topics found</h4>;
+		return <h4 className='p-4'>No topics found</h4>;
 	}
 
 	const renderedTopics = topics.map((topic) => {
 		return (
 			<div key={topic.id}>
-				{variant === 'chip' ? (
-					<SimpleTopicList topic={topic as Topic} />
-				) : (
-					<DetailedTopicList topic={topic as TopicForListDisplay} />
-				)}
+				<Link
+					className='flex items-center p-4 my-2 bg-white rounded-lg shadow-sm hover:bg-gray-100 transition'
+					href={paths.topicShow(topic.slug)}
+					key={topic.id}
+				>
+					<Avatar
+						className='mr-4'
+						fallback={<CommandLineIcon className='size-8' />}
+					/>
+					<div>
+						<h3 className='text-lg font-semibold'>{topic?.slug}</h3>
+						<p className='text-sm text-gray-600'>{topic?.description}</p>
+						<p className='text-xs text-gray-600'>
+							Posts: {topic?._count?.posts || 0}
+						</p>
+					</div>
+				</Link>
 			</div>
 		);
 	});

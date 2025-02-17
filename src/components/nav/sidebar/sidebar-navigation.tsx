@@ -4,12 +4,7 @@ import SidebarContent from './sidebar-content';
 import SidebarLoading from './sidebar-loading';
 
 async function TopicsLoader() {
-	const topics = await fetchAllTopics();
-
-	if (!topics || topics.length === 0) {
-		return null;
-	}
-
+	const topics = (await fetchAllTopics()) || [];
 	return <SidebarContent topics={topics} />;
 }
 

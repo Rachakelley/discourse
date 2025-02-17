@@ -9,7 +9,7 @@ interface UserListProps {
 
 export default function UserList({ users }: UserListProps) {
 	if (!users || users.length === 0) {
-		return <h4>No users found</h4>;
+		return <h4 className='p-4'>No users found</h4>;
 	}
 
 	const renderedUsers = users.map((user) => {

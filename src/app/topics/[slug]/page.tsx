@@ -1,6 +1,8 @@
+import { Suspense } from 'react';
 import { Divider } from '@heroui/react';
 import PostCreateFormController from '@/components/posts/post-create-form-controller';
 import PostList from '@/components/posts/post-list';
+import PostListLoading from '@/components/posts/post-list-loading';
 import { fetchPostsByTopicSlug } from '@/db/queries/posts';
 
 interface TopicShowPageProps {
@@ -11,7 +13,6 @@ interface TopicShowPageProps {
 
 export default async function TopicShowPage({ params }: TopicShowPageProps) {
 	const { slug } = await params;
-	const postsByTopic = await fetchPostsByTopicSlug(slug);
 
 	return (
 		<div>
@@ -21,8 +22,15 @@ export default async function TopicShowPage({ params }: TopicShowPageProps) {
 			<Divider className='my-2' />
 			<div className='col-span-3'>
 				<h1 className='text-xl m-2'>{slug}</h1>
-				<PostList posts={postsByTopic} />
+				<Suspense fallback={<PostListLoading />}>
+					<AsyncPostList slug={slug} />
+				</Suspense>
 			</div>
 		</div>
 	);
+}
+
+async function AsyncPostList({ slug }: { slug: string }) {
+	const postsByTopic = await fetchPostsByTopicSlug(slug);
+	return <PostList posts={postsByTopic} />;
 }
