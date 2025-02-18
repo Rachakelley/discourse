@@ -1,8 +1,7 @@
 import './globals.css';
 import { Providers } from './providers';
 import Header from '@/components/header/header';
-import SidebarNavigation from '@/components/nav/sidebar/sidebar-navigation';
-import MobileNavigation from '@/components/nav/mobile-navigation';
+import NavigationWrapper from '@/components/nav/navigation-wrapper';
 
 export default function RootLayout({
 	children,
@@ -16,8 +15,7 @@ export default function RootLayout({
 					<Providers>
 						<Header />
 						<div className='flex'>
-							<SidebarNavigation />
-							<MobileNavigation />
+							<NavigationWrapper />
 							<main className='ml-0 md:ml-64 w-full mx-auto'>
 								<div className='container px-6 pt-20 md:py-4 max-w-2xl'>
 									{children}

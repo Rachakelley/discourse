@@ -24,7 +24,7 @@ export default async function TopicShowPage({
 
 	return (
 		<div>
-			<div className='flex gap-2 py-3 px-2 min-w-fit'>
+			<div className='flex gap-2 px-2 min-w-fit'>
 				<PostCreateFormController slug={slug} />
 			</div>
 			<Divider className='my-2' />

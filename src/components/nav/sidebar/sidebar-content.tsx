@@ -35,6 +35,7 @@ export default function SidebarContent({ topics }: SidebarContentProps) {
 				}}
 			>
 				<ListboxSection
+					className='mt-2'
 					showDivider
 					items={[{ key: 'home', textValue: 'Home', label: 'Home' }]}
 				>

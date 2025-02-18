@@ -44,6 +44,7 @@ export default function PaginatedCommentList({
 			<CommentListProfileTab comments={comments} />
 			<div className='flex justify-center'>
 				<Pagination
+					className='m-0'
 					total={totalPages}
 					initialPage={currentPage}
 					page={currentPage}

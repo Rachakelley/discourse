@@ -44,6 +44,7 @@ export default function PaginatedTopicList({
 			<TopicList topics={topics} />
 			<div className='flex justify-center'>
 				<Pagination
+					className='m-0'
 					total={totalPages}
 					initialPage={currentPage}
 					page={currentPage}

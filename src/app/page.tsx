@@ -25,7 +25,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
 	return (
 		<div>
-			<div className='flex gap-2 py-3 px-2 min-w-fit'>
+			<div className='flex gap-2 px-2 min-w-fit'>
 				<TopicCreateForm />
 				<PostCreateFormController />
 			</div>

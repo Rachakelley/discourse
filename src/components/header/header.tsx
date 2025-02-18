@@ -14,7 +14,7 @@ export default function Header() {
 					href='/'
 				>
 					<LogoIcon />
-					Discourse
+					<span className='hidden md:inline'>Discourse</span>
 				</Link>
 			</NavbarBrand>
 			<NavbarContent justify='center'>

@@ -52,6 +52,7 @@ export default function PostList({
 			<div className='space-y-2'>{renderedPosts}</div>
 			<div className='flex justify-center'>
 				<Pagination
+					className='m-0'
 					total={totalPages}
 					initialPage={currentPage}
 					page={currentPage}
