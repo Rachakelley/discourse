@@ -18,7 +18,7 @@ export default function RootLayout({
 						<div className='flex'>
 							<SidebarNavigation />
 							<MobileNavigation />
-							<main className='ml-0 md:ml-48 w-full mx-auto'>
+							<main className='ml-0 md:ml-64 w-full mx-auto'>
 								<div className='container px-6 pt-20 md:py-4 max-w-2xl'>
 									{children}
 								</div>
