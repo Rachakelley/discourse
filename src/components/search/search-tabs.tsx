@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, lazy, Suspense } from 'react';
+import { useRouter } from 'next/navigation';
 import { Chip, Divider, Skeleton, Tab, Tabs } from '@heroui/react';
 import {
 	RectangleGroupIcon,
@@ -10,26 +11,51 @@ import {
 import { PostForListDisplay } from '@/db/queries/posts';
 import { TopicForListDisplay } from '@/db/queries/topics';
 import { UserForListDisplay } from '@/db/queries/users';
+import paths from '@/paths';
 
-const PostList = lazy(() => import('@/components/posts/post-list'));
-const TopicList = lazy(() => import('@/components/topics/topic-list'));
+const PaginatedPostList = lazy(
+	() => import('@/components/posts/paginated-post-list')
+);
+const PaginatedTopicList = lazy(
+	() => import('@/components/topics/paginated-topic-list')
+);
 const UserList = lazy(() => import('@/components/users/user-list'));
 
 interface SearchTabsProps {
 	posts: PostForListDisplay[];
 	topics: TopicForListDisplay[];
 	users: UserForListDisplay[];
+	currentPage: number;
+	totalTopics: number;
+	totalPosts: number;
+	topicsPerPage: number;
+	postsPerPage: number;
+	searchTerm: string;
 }
 
 export default function SearchTabs({
 	posts,
 	topics,
 	users,
+	currentPage,
+	totalTopics,
+	totalPosts,
+	topicsPerPage,
+	postsPerPage,
+	searchTerm,
 }: SearchTabsProps) {
+	const router = useRouter();
 	const [selectedTab, setSelectedTab] = useState('posts');
-	const postCount = posts?.length;
-	const topicCount = topics?.length;
 	const userCount = users?.length;
+	const totalPagesOfPosts = Math.ceil(totalPosts / postsPerPage);
+	const totalPagesOfTopics = Math.ceil(totalTopics / topicsPerPage);
+
+	const handleTabChange = (key: string) => {
+		setSelectedTab(key);
+		// Reset to page 1 when switching tabs
+		const searchUrl = `${paths.searchTerm(searchTerm)}&tab=${key}&page=1`;
+		router.push(searchUrl);
+	};
 
 	return (
 		<div>
@@ -37,10 +63,10 @@ export default function SearchTabs({
 				aria-label='Options'
 				color='success'
 				classNames={{
-          cursor: "w-full bg-[#35d0006e]",
+					cursor: 'w-full bg-[#35d0006e]',
 				}}
 				selectedKey={selectedTab}
-				onSelectionChange={(key) => setSelectedTab(key.toString())}
+				onSelectionChange={(key) => handleTabChange(key.toString())}
 				className='flex flex-col md:flex-row'
 			>
 				<Tab
@@ -53,7 +79,7 @@ export default function SearchTabs({
 								size='sm'
 								variant='faded'
 							>
-								{postCount}
+								{totalPosts}
 							</Chip>
 						</div>
 					}
@@ -69,7 +95,7 @@ export default function SearchTabs({
 								size='sm'
 								variant='faded'
 							>
-								{topicCount}
+								{totalTopics}
 							</Chip>
 						</div>
 					}
@@ -96,12 +122,24 @@ export default function SearchTabs({
 			<div className='flex flex-col gap-4 pt-4'>
 				{selectedTab === 'posts' && (
 					<Suspense fallback={<Skeleton className='h-6 w-32' />}>
-						<PostList posts={posts} />
+						<PaginatedPostList
+							posts={posts}
+							currentPage={currentPage}
+							totalPages={totalPagesOfPosts}
+							baseUrl={`${paths.searchTerm(searchTerm)}&`}
+							context='search'
+						/>
 					</Suspense>
 				)}
 				{selectedTab === 'topics' && (
 					<Suspense fallback={<Skeleton className='h-6 w-32' />}>
-						<TopicList topics={topics} />
+						<PaginatedTopicList
+							topics={topics}
+							currentPage={currentPage}
+							totalPages={totalPagesOfTopics}
+							baseUrl={`${paths.searchTerm(searchTerm)}&`}
+							context='search'
+						/>
 					</Suspense>
 				)}
 				{selectedTab === 'users' && (

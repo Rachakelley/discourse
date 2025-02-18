@@ -1,14 +1,22 @@
 import Link from 'next/link';
-import { Button } from '@heroui/react';
+import { Pagination } from '@heroui/react';
 import paths from '@/paths';
 import type { PostForListDisplay } from '@/db/queries/posts';
 
 interface PostListProps {
 	posts: PostForListDisplay[];
+	currentPage: number;
+	totalPages: number;
+	onPageChange: (page: number) => void;
 }
 
-export default function PostList({ posts }: PostListProps) {
-	if (!posts || posts.length === 0) {
+export default function PostList({
+	posts,
+	currentPage,
+	totalPages,
+	onPageChange,
+}: PostListProps) {
+	if (!Array.isArray(posts) || posts.length === 0) {
 		return <h4 className='p-4'>No posts found</h4>;
 	}
 
@@ -40,9 +48,20 @@ export default function PostList({ posts }: PostListProps) {
 	});
 
 	return (
-		<div className='space-y-2'>
-			{renderedPosts}
-			<Button>Load More</Button>
+		<div className='space-y-4'>
+			<div className='space-y-2'>{renderedPosts}</div>
+			<div className='flex justify-center'>
+				<Pagination
+					total={totalPages}
+					initialPage={currentPage}
+					page={currentPage}
+					onChange={onPageChange}
+					showControls
+					size='sm'
+					color='success'
+					showShadow
+				/>
+			</div>
 		</div>
 	);
 }

@@ -5,11 +5,29 @@ import SearchTabs from './search-tabs';
 
 interface SearchTabControllerProps {
 	term: string;
+	page: string;
 }
 
-export default async function SearchTabController({ term }: SearchTabControllerProps) {
-	const posts = await fetchPostsBySearchTerm(term);
-	const topics = await fetchTopicsBySearchTerm(term);
+export default async function SearchTabController({
+	term,
+	page,
+}: SearchTabControllerProps) {
+	const currentPage = Number(page) || 1;
+	const postsPerPage = 10;
+	const topicsPerPage = 10;
+	const offset = (currentPage - 1) * postsPerPage;
+
+	const { posts, totalPosts } = await fetchPostsBySearchTerm(
+		term,
+		offset,
+		postsPerPage
+	);
+	const { topics, totalTopics } = await fetchTopicsBySearchTerm(
+		term,
+		(currentPage - 1) * topicsPerPage,
+		topicsPerPage
+	);
+
 	const users = await fetchUsersByTerm(term);
 
 	return (
@@ -17,6 +35,12 @@ export default async function SearchTabController({ term }: SearchTabControllerP
 			posts={posts}
 			topics={topics}
 			users={users}
+			currentPage={currentPage}
+			totalTopics={totalTopics}
+			totalPosts={totalPosts}
+			postsPerPage={postsPerPage}
+			topicsPerPage={topicsPerPage}
+			searchTerm={term}
 		/>
 	);
 }

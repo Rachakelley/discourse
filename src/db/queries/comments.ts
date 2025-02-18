@@ -31,9 +31,18 @@ export const fetchCommentsByPostId = cache(
 	}
 );
 
+interface CommentsWithPagination {
+	comments: CommentWithAuthor[];
+	totalComments: number;
+}
+
 export const fetchCommentsByUserId = cache(
-	(userId: string): Promise<CommentWithAuthor[]> => {
-		return db.comment.findMany({
+	async (
+		userId: string,
+		skip: number = 0,
+		take: number = 10
+	): Promise<CommentsWithPagination> => {
+		const comments = await db.comment.findMany({
 			where: { userId },
 			include: {
 				user: { select: { id: true, name: true, image: true } },
@@ -46,6 +55,17 @@ export const fetchCommentsByUserId = cache(
 					},
 				},
 			},
+			orderBy: {
+				createdAt: 'desc',
+			},
+			skip,
+			take,
 		});
+
+		const totalComments = await db.comment.count({
+			where: { userId },
+		});
+
+		return { comments, totalComments };
 	}
 );

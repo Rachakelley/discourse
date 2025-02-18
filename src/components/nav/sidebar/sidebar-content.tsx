@@ -15,23 +15,15 @@ interface ListboxWrapperProps {
 
 export const ListboxWrapper = ({ children }: ListboxWrapperProps) => (
 	/* 
-		On small screens less than 768px The navbar is hidden (display: none)
-		On medium screens and larger ≥ 768px The navbar is visible (display: block)
-	*/
-	<div className='w-48 fixed left-0 top-[64px] h-[calc(100vh-64px)] border-r border-stone-200 bg-white hidden md:block'>
+        On small screens less than 768px The navbar is hidden (display: none)
+        On medium screens and larger ≥ 768px The navbar is visible (display: block)
+    */
+	<div className='w-48 fixed left-0 top-[64px] h-[calc(100vh-64px)] border-r border-stone-200 bg-white hidden md:block overflow-y-auto'>
 		{children}
 	</div>
 );
 
 export default function SidebarContent({ topics }: SidebarContentProps) {
-	const handleAction = (key: string) => {
-		switch (key) {
-			case 'Home':
-				console.log('Home');
-				break;
-		}
-	};
-
 	return (
 		<ListboxWrapper>
 			<Listbox
@@ -41,7 +33,6 @@ export default function SidebarContent({ topics }: SidebarContentProps) {
 				itemClasses={{
 					base: 'pl-4 py-0 first:rounded-t-medium last:rounded-b-medium rounded-none gap-3 data-[hover=true]:bg-default-100/80',
 				}}
-				onAction={(key) => handleAction(key.toString())}
 			>
 				<ListboxSection
 					showDivider

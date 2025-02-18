@@ -25,57 +25,159 @@ export const fetchPostsBySlugAndPostId = cache(
 );
 
 export const fetchPostsByUserId = cache(
-	(userId: string): Promise<PostForListDisplay[]> => {
-		return db.post.findMany({
-			where: { userId },
+	(
+		userId: string,
+		skip: number = 0,
+		take: number = 10
+	): Promise<PostsWithPagination> => {
+		return db.post
+			.findMany({
+				where: { userId },
+				include: {
+					topic: { select: { slug: true } },
+					user: { select: { name: true } },
+					_count: { select: { comments: true } },
+				},
+				orderBy: { createdAt: 'desc' },
+				skip,
+				take,
+			})
+			.then((posts) => {
+				return db.post
+					.count({
+						where: { userId },
+					})
+					.then((totalPosts) => {
+						return { posts, totalPosts };
+					});
+			});
+	}
+);
+
+export const fetchPostsBySearchTerm = cache(
+	async (searchTerm: string, skip: number, take: number) => {
+		const [posts, totalPosts] = await db.$transaction([
+			db.post.findMany({
+				where: {
+					OR: [
+						{
+							title: {
+								contains: searchTerm,
+								mode: 'insensitive',
+							},
+						},
+						{
+							content: {
+								contains: searchTerm,
+								mode: 'insensitive',
+							},
+						},
+					],
+				},
+				include: {
+					topic: {
+						select: {
+							slug: true,
+						},
+					},
+					user: {
+						select: {
+							name: true,
+							image: true,
+						},
+					},
+					_count: {
+						select: {
+							comments: true,
+						},
+					},
+				},
+				orderBy: {
+					createdAt: 'desc',
+				},
+				skip,
+				take,
+			}),
+			db.post.count({
+				where: {
+					OR: [
+						{
+							title: {
+								contains: searchTerm,
+								mode: 'insensitive',
+							},
+						},
+						{
+							content: {
+								contains: searchTerm,
+								mode: 'insensitive',
+							},
+						},
+					],
+				},
+			}),
+		]);
+
+		return {
+			posts,
+			totalPosts,
+		};
+	}
+);
+
+export interface PostsWithPagination {
+	posts: PostForListDisplay[];
+	totalPosts: number;
+}
+
+export async function fetchPostsByTopicSlug(
+	slug: string,
+	skip: number = 0,
+	take: number = 10
+): Promise<PostsWithPagination> {
+	const [posts, totalPosts] = await Promise.all([
+		db.post.findMany({
+			where: { topic: { slug } },
 			include: {
 				topic: { select: { slug: true } },
 				user: { select: { name: true } },
 				_count: { select: { comments: true } },
 			},
-		});
-	}
-);
+			orderBy: { createdAt: 'desc' },
+			skip,
+			take,
+		}),
+		db.post.count({
+			where: { topic: { slug } },
+		}),
+	]);
 
-export const fetchPostsBySearchTerm = cache(
-	(term: string): Promise<PostForListDisplay[]> => {
-		return db.post.findMany({
-			where: {
-				OR: [
-					{ title: { contains: term, mode: 'insensitive' } },
-					{ content: { contains: term, mode: 'insensitive' } },
-				],
-			},
+	return {
+		posts,
+		totalPosts,
+	};
+}
+
+export async function fetchTopPosts(
+	skip: number = 0,
+	take: number = 10
+): Promise<PostsWithPagination> {
+	const [posts, totalPosts] = await Promise.all([
+		db.post.findMany({
+			take,
+			skip,
+			orderBy: [{ comments: { _count: 'desc' } }],
 			include: {
 				topic: { select: { slug: true } },
 				user: { select: { name: true, image: true } },
 				_count: { select: { comments: true } },
 			},
-		});
-	}
-);
+		}),
+		db.post.count(),
+	]);
 
-export function fetchPostsByTopicSlug(
-	slug: string
-): Promise<PostForListDisplay[]> {
-	return db.post.findMany({
-		where: { topic: { slug } }, // all posts tied to a given slug
-		include: {
-			topic: { select: { slug: true } }, // select just the slug property
-			user: { select: { name: true } }, // from the user of the post, select just the name property
-			_count: { select: { comments: true } }, // from the post, select just the comments count
-		},
-	});
-}
-
-export function fetchTopPosts(): Promise<PostForListDisplay[]> {
-	return db.post.findMany({
-		take: 5,
-		orderBy: [{ comments: { _count: 'desc' } }],
-		include: {
-			topic: { select: { slug: true } },
-			user: { select: { name: true, image: true } },
-			_count: { select: { comments: true } },
-		},
-	});
+	return {
+		posts,
+		totalPosts,
+	};
 }

@@ -1,7 +1,9 @@
 import { cache } from 'react';
 import { db } from '@/db';
 
-export function fetchAllTopics(): Promise<TopicForListDisplay[]> {
+export function fetchAllTopics(
+	limit: number = 10
+): Promise<TopicForListDisplay[]> {
 	return db.topic.findMany({
 		select: {
 			id: true,
@@ -18,6 +20,7 @@ export function fetchAllTopics(): Promise<TopicForListDisplay[]> {
 		orderBy: {
 			slug: 'asc',
 		},
+		take: limit,
 	});
 }
 
@@ -30,9 +33,17 @@ export interface TopicForListDisplay {
 	_count: { posts: number };
 }
 
+interface TopicsWithPagination {
+	topics: TopicForListDisplay[];
+	totalTopics: number;
+}
 export const fetchTopicsBySearchTerm = cache(
-	(term: string): Promise<TopicForListDisplay[]> => {
-		return db.topic.findMany({
+	async (
+		term: string,
+		skip: number = 0,
+		take: number = 10
+	): Promise<TopicsWithPagination> => {
+		const topics = await db.topic.findMany({
 			where: {
 				OR: [{ slug: { contains: term, mode: 'insensitive' } }],
 			},
@@ -47,6 +58,14 @@ export const fetchTopicsBySearchTerm = cache(
 			orderBy: {
 				slug: 'asc',
 			},
+			skip,
+			take,
 		});
+		const totalTopics = await db.topic.count({
+			where: {
+				OR: [{ slug: { contains: term, mode: 'insensitive' } }],
+			},
+		});
+		return { topics, totalTopics };
 	}
 );
