@@ -1,3 +1,5 @@
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import Image from 'next/image';
 import Link from 'next/link';
 import CommentCreateForm from '@/components/comments/comment-create-form';
@@ -40,15 +42,25 @@ export default async function CommentShow({
 						alt='user image'
 						width={40}
 						height={40}
-        		className='w-10 h-10 rounded-full hover:opacity-80 hover:shadow-lg transition duration-200'
+						className='w-10 h-10 rounded-full hover:opacity-80 hover:shadow-lg transition duration-200'
 					/>
 				</Link>
 				<div className='flex-1 space-y-3'>
 					<p className='text-sm font-medium text-gray-500'>
 						{comment.user.name}
 					</p>
-					<p>{comment.content}</p>
-
+					<div className='prose max-w-none'>
+						<ReactMarkdown
+							remarkPlugins={[remarkGfm]}
+							components={{
+								p: ({ children }) => (
+									<p className='whitespace-pre-wrap'>{children}</p>
+								),
+							}}
+						>
+							{comment.content}
+						</ReactMarkdown>
+					</div>
 					<CommentCreateForm
 						postId={comment.postId}
 						parentId={comment.id}

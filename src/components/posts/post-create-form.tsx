@@ -109,7 +109,7 @@ export default function PostCreateForm({
 														<li>- bullet points</li>
 														<li>1. numbered list</li>
 														<li>[link](url)</li>
-														<li>\`\`\`code block\`\`\`</li>
+														<li>```code block```</li>
 													</ul>
 												</div>
 											}

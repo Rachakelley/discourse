@@ -1,8 +1,9 @@
 'use client';
 
-import { useActionState } from 'react';
-import { useEffect, useRef, useState } from 'react';
-import { Textarea, Button } from '@heroui/react';
+import { useActionState, useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Textarea, Button, Tooltip } from '@heroui/react';
+import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import FormButton from '@/components/common/form-button';
 import * as actions from '@/actions';
 import { getFormattedErrors } from '@/utils';
@@ -20,6 +21,11 @@ export default function CommentCreateForm({
 }: CommentCreateFormProps) {
 	const [open, setOpen] = useState(startOpen);
 	const ref = useRef<HTMLFormElement | null>(null);
+	const { register } = useForm({
+		defaultValues: {
+			content: '',
+		},
+	});
 	const [formState, action, isPending] = useActionState(
 		actions.createComment.bind(null, { postId, parentId }),
 		{ errors: {} }
@@ -42,8 +48,31 @@ export default function CommentCreateForm({
 		>
 			<div className='space-y-2 px-1'>
 				<Textarea
-					name='content'
-					label='Reply'
+					{...register('content')}
+					label={
+						<div className='flex items-center gap-2'>
+							<p>Reply (Markdown supported)</p>
+							<Tooltip
+								content={
+									<div className='w-48 p-2'>
+										<h3 className='font-bold'>Markdown options:</h3>
+										<ul>
+											<li># Heading</li>
+											<li>**bold**</li>
+											<li>*italic*</li>
+											<li>- bullet points</li>
+											<li>1. numbered list</li>
+											<li>[link](url)</li>
+											<li>```code block```</li>
+										</ul>
+									</div>
+								}
+								placement='right-start'
+							>
+								<InformationCircleIcon className='size-6' />
+							</Tooltip>
+						</div>
+					}
 					placeholder='Enter your comment'
 					isInvalid={!!formState.errors.content}
 					errorMessage={getFormattedErrors(formState?.errors?.content)}
@@ -55,7 +84,7 @@ export default function CommentCreateForm({
 					</div>
 				) : null}
 
-				<FormButton isLoading={isPending}>Create Comment</FormButton>
+				<FormButton isLoading={isPending}>Post Comment</FormButton>
 			</div>
 		</form>
 	);
