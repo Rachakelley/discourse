@@ -41,16 +41,16 @@ export interface UserForProfileDisplay {
 	image: string | null;
 }
 
-export const fetchUserById = async (
-	userId: string
-): Promise<UserForProfileDisplay | null> => {
-	return await db.user.findUnique({
-		where: { id: userId },
-		select: {
-			id: true,
-			email: true,
-			name: true,
-			image: true,
-		},
-	});
-};
+export const fetchUserById = cache(
+	async (userId: string): Promise<UserForProfileDisplay | null> => {
+		return await db.user.findUnique({
+			where: { id: userId },
+			select: {
+				id: true,
+				email: true,
+				name: true,
+				image: true,
+			},
+		});
+	}
+);

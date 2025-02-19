@@ -4,6 +4,8 @@ import PostCreateFormController from '@/components/posts/post-create-form-contro
 import PaginatedPostList from '@/components/posts/paginated-post-list';
 import PostListLoading from '@/components/posts/post-list-loading';
 import { fetchPostsByTopicSlug } from '@/db/queries/posts';
+import { fetchTopicDetailsBySlug } from '@/db/queries/topics';
+import TopicDetails from '@/components/topics/topic-details';
 
 interface TopicShowPageProps {
 	params: Promise<{
@@ -20,23 +22,36 @@ export default async function TopicShowPage({
 }: TopicShowPageProps) {
 	const { slug } = await params;
 	const { page } = await searchParams;
+
+	const { description, createdAt, postsCount } = await fetchTopicDetailsBySlug(
+		slug
+	);
 	const currentPage = Number(page) || 1;
 
 	return (
-		<div>
-			<div className='flex gap-2 px-2 min-w-fit'>
-				<PostCreateFormController slug={slug} />
+		<div className='flex flex-col gap-4 md:grid md:grid-cols-5'>
+			<div className='order-2 md:order-1 md:col-span-3'>
+				<div className='flex gap-2 px-2 min-w-fit'>
+					<PostCreateFormController slug={slug} />
+				</div>
+				<Divider className='my-2' />
+				<div>
+					<Suspense fallback={<PostListLoading />}>
+						<AsyncPostList
+							slug={slug}
+							currentPage={currentPage}
+							postsPerPage={10}
+						/>
+					</Suspense>
+				</div>
 			</div>
-			<Divider className='my-2' />
-			<div className='col-span-3'>
-				<h1 className='text-xl m-2'>{slug}</h1>
-				<Suspense fallback={<PostListLoading />}>
-					<AsyncPostList
-						slug={slug}
-						currentPage={currentPage}
-						postsPerPage={10}
-					/>
-				</Suspense>
+			<div className='order-1 md:order-2 md:col-span-2'>
+				<TopicDetails
+					description={description}
+					createdAt={createdAt}
+					postsCount={postsCount}
+					slug={slug}
+				/>
 			</div>
 		</div>
 	);

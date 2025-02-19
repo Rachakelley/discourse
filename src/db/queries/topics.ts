@@ -1,28 +1,28 @@
 import { cache } from 'react';
 import { db } from '@/db';
 
-export function fetchAllTopics(
-	limit: number = 10
-): Promise<TopicForListDisplay[]> {
-	return db.topic.findMany({
-		select: {
-			id: true,
-			createdAt: true,
-			updatedAt: true,
-			slug: true,
-			description: true,
-			_count: {
-				select: {
-					posts: true,
+export const fetchAllTopics = cache(
+	(limit: number = 10): Promise<TopicForListDisplay[]> => {
+		return db.topic.findMany({
+			select: {
+				id: true,
+				createdAt: true,
+				updatedAt: true,
+				slug: true,
+				description: true,
+				_count: {
+					select: {
+						posts: true,
+					},
 				},
 			},
-		},
-		orderBy: {
-			slug: 'asc',
-		},
-		take: limit,
-	});
-}
+			orderBy: {
+				slug: 'asc',
+			},
+			take: limit,
+		});
+	}
+);
 
 export interface TopicForListDisplay {
 	id: string;
@@ -67,5 +67,33 @@ export const fetchTopicsBySearchTerm = cache(
 			},
 		});
 		return { topics, totalTopics };
+	}
+);
+
+export const fetchTopicDetailsBySlug = cache(
+	async (
+		slug: string
+	): Promise<{
+		description: string;
+		createdAt: Date;
+		postsCount: number;
+	}> => {
+		const topic = await db.topic.findUnique({
+			where: { slug },
+			select: {
+				description: true,
+				createdAt: true,
+				_count: {
+					select: {
+						posts: true,
+					},
+				},
+			},
+		});
+		return {
+			description: topic?.description || '',
+			createdAt: topic?.createdAt || new Date(),
+			postsCount: topic?._count.posts || 0,
+		};
 	}
 );

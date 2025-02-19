@@ -31,17 +31,19 @@ export default function AuthContent({ userData }: AuthContentProps) {
 		<div>
 			<Popover placement='left'>
 				<PopoverTrigger>
+					{/* popover component wont open with custom UserAvatar */}
 					<Avatar
-						isBordered
-						fallback={<FaceSmileIcon className='size-8' />}
+						className='w-10 h-10 rounded-full hover:opacity-80 hover:shadow-lg transition duration-200'
 						src={image || ''}
+						alt={name || 'Anonymous'}
+						size='sm'
 					/>
 				</PopoverTrigger>
 				<PopoverContent>
 					<div className='p-2'>
 						<User
 							avatarProps={{
-								src: image || '',							
+								src: image || '',
 								fallback: <FaceSmileIcon className='size-8' />,
 							}}
 							description={email}

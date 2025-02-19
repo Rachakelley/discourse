@@ -46,7 +46,7 @@ export default function CommentCreateForm({
 			action={action}
 			ref={ref}
 		>
-			<div className='space-y-2 px-1'>
+			<div className='space-y-2'>
 				<Textarea
 					{...register('content')}
 					label={
@@ -73,6 +73,9 @@ export default function CommentCreateForm({
 							</Tooltip>
 						</div>
 					}
+					classNames={{
+						inputWrapper: 'rounded-none',
+					}}
 					placeholder='Enter your comment'
 					isInvalid={!!formState.errors.content}
 					errorMessage={getFormattedErrors(formState?.errors?.content)}

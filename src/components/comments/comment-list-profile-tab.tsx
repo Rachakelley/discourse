@@ -23,11 +23,11 @@ export default function CommentListProfileTab({
 					<p className='font-bold text-xs text-gray-600'>
 						{comment?.post?.topic?.slug}
 					</p>
-					<span className='text-xs'>{' - '}</span>
+					<span className='text-xs'>•</span>
 					<p className='text-xs text-gray-400'>{comment?.post?.title}</p>
 				</div>
-				<p>{comment?.content}</p>
-				<p className='text-xs text-gray-600'>
+				<p className='pt-2'>{comment?.content}</p>
+				<p className='pt-2 text-xs text-gray-600'>
 					Commented on {comment?.createdAt?.toLocaleDateString()}
 				</p>
 			</Link>

@@ -1,7 +1,6 @@
-import { Avatar } from '@heroui/react';
 import { fetchUserById } from '@/db/queries/users';
-import { FaceSmileIcon } from '@heroicons/react/24/solid';
 import ProfileTabController from '@/components/profile/profile-tab-controller';
+import UserAvatar from '@/components/common/user-avatar';
 
 interface UserProfilePageProps {
 	params: Promise<{
@@ -32,11 +31,11 @@ export default async function UserProfilePage({
 	return (
 		<div className='p-4 my-2 bg-white rounded-lg shadow-md'>
 			<div className='flex items-center'>
-				<Avatar
+				<UserAvatar
 					className='mr-4'
 					src={user?.image || ''}
+					alt='user image'
 					size='lg'
-					fallback={<FaceSmileIcon className='size-8' />}
 				/>
 				<div>
 					<h3 className='text-lg font-semibold'>{user?.name}</h3>

@@ -1,7 +1,8 @@
-import { Avatar, Link } from '@heroui/react';
+import { Link } from '@heroui/react';
 import { CommandLineIcon } from '@heroicons/react/24/outline';
 import { TopicForListDisplay } from '@/db/queries/topics';
 import paths from '@/paths';
+import UserAvatar from '@/components/common/user-avatar';
 
 interface TopicListProps {
 	topics: TopicForListDisplay[];
@@ -16,13 +17,15 @@ export default function TopicList({ topics }: TopicListProps) {
 		return (
 			<div key={topic.id}>
 				<Link
-					className='flex items-center p-4 my-2 bg-white rounded-lg shadow-sm hover:bg-gray-100 transition'
+					className='text-black text-md flex items-center p-4 my-2 bg-white rounded-lg shadow-sm hover:bg-gray-100 transition'
 					href={paths.topicShow(topic.slug)}
 					key={topic.id}
 				>
-					<Avatar
+					<UserAvatar
 						className='mr-4'
-						fallback={<CommandLineIcon className='size-8' />}
+						fallback={<CommandLineIcon />}
+						alt={`Topic Icon for ${topic.slug}`}
+						size='sm'
 					/>
 					<div>
 						<h3 className='text-lg font-semibold'>{topic?.slug}</h3>

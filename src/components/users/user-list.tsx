@@ -1,7 +1,7 @@
-import { Avatar, Link } from '@heroui/react';
-import { FaceSmileIcon } from '@heroicons/react/24/outline';
+import { Link } from '@heroui/react';
 import paths from '@/paths';
 import { UserForListDisplay } from '@/db/queries/users';
+import UserAvatar from '@/components/common/user-avatar';
 
 interface UserListProps {
 	users: UserForListDisplay[];
@@ -19,10 +19,11 @@ export default function UserList({ users }: UserListProps) {
 				href={paths.userProfileShow(user?.id)}
 				key={user.id}
 			>
-				<Avatar
+				<UserAvatar
 					className='mr-4'
 					src={user?.image || ''}
-					fallback={<FaceSmileIcon className='size-8' />}
+					size='sm'
+					alt={`User Avatar for ${user.name}`}
 				/>
 				<div>
 					<h3 className='text-lg font-semibold'>{user.name}</h3>

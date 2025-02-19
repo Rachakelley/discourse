@@ -17,7 +17,7 @@ export default function RootLayout({
 						<div className='flex'>
 							<NavigationWrapper />
 							<main className='ml-0 md:ml-64 w-full mx-auto'>
-								<div className='container px-6 pt-20 md:py-4 max-w-2xl'>
+								<div className='container px-6 pt-20 md:py-4 max-w-4xl'>
 									{children}
 								</div>
 							</main>

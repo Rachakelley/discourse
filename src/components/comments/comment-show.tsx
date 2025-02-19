@@ -1,7 +1,8 @@
+import { format } from 'timeago.js';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import Image from 'next/image';
 import Link from 'next/link';
+import UserAvatar from '@/components/common/user-avatar';
 import CommentCreateForm from '@/components/comments/comment-create-form';
 import { fetchCommentsByPostId } from '@/db/queries/comments';
 import paths from '@/paths';
@@ -37,18 +38,24 @@ export default async function CommentShow({
 		<div className='p-4 border mt-2 mb-1'>
 			<div className='flex gap-3'>
 				<Link href={paths.userProfileShow(comment.user.id)}>
-					<Image
-						src={comment.user.image || ''}
-						alt='user image'
-						width={40}
-						height={40}
+					<UserAvatar
 						className='w-10 h-10 rounded-full hover:opacity-80 hover:shadow-lg transition duration-200'
+						src={comment.user?.image || ''}
+						alt={`${comment.user.name}'s profile`}
+						size='sm'
 					/>
 				</Link>
 				<div className='flex-1 space-y-3'>
-					<p className='text-sm font-medium text-gray-500'>
-						{comment.user.name}
-					</p>
+					<div className='flex items-center gap-2'>
+						<p className='text-sm font-medium text-gray-500'>
+							{comment.user.name}
+						</p>
+						<p className='text-sm flex items-center text-gray-700'>•</p>
+						<p className='text-sm font-medium text-gray-500'>
+							Commented{' '}
+							{comment.createdAt ? format(new Date(comment.createdAt)) : ''}
+						</p>
+					</div>
 					<div className='prose max-w-none'>
 						<ReactMarkdown
 							remarkPlugins={[remarkGfm]}

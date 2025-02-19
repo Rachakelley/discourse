@@ -4,7 +4,7 @@ import { db } from '@/db';
 
 export type PostForListDisplay = Post & {
 	topic: { slug: string };
-	user: { name: string | null };
+	user: { id?: string | null; name: string | null; image?: string | null };
 	_count: { comments: number };
 };
 
@@ -17,7 +17,7 @@ export const fetchPostsBySlugAndPostId = cache(
 			},
 			include: {
 				topic: true,
-				user: { select: { name: true } },
+				user: { select: { id: true, name: true, image: true } },
 				_count: { select: { comments: true } },
 			},
 		});
@@ -35,7 +35,7 @@ export const fetchPostsByUserId = cache(
 				where: { userId },
 				include: {
 					topic: { select: { slug: true } },
-					user: { select: { name: true } },
+					user: { select: { name: true, image: true } },
 					_count: { select: { comments: true } },
 				},
 				orderBy: { createdAt: 'desc' },
@@ -130,54 +130,55 @@ export interface PostsWithPagination {
 	totalPosts: number;
 }
 
-export async function fetchPostsByTopicSlug(
-	slug: string,
-	skip: number = 0,
-	take: number = 10
-): Promise<PostsWithPagination> {
-	const [posts, totalPosts] = await Promise.all([
-		db.post.findMany({
-			where: { topic: { slug } },
-			include: {
-				topic: { select: { slug: true } },
-				user: { select: { name: true } },
-				_count: { select: { comments: true } },
-			},
-			orderBy: { createdAt: 'desc' },
-			skip,
-			take,
-		}),
-		db.post.count({
-			where: { topic: { slug } },
-		}),
-	]);
+export const fetchPostsByTopicSlug = cache(
+	async (
+		slug: string,
+		skip: number = 0,
+		take: number = 10
+	): Promise<PostsWithPagination> => {
+		const [posts, totalPosts] = await Promise.all([
+			db.post.findMany({
+				where: { topic: { slug } },
+				include: {
+					topic: { select: { slug: true } },
+					user: { select: { name: true, image: true } },
+					_count: { select: { comments: true } },
+				},
+				orderBy: { createdAt: 'desc' },
+				skip,
+				take,
+			}),
+			db.post.count({
+				where: { topic: { slug } },
+			}),
+		]);
 
-	return {
-		posts,
-		totalPosts,
-	};
-}
+		return {
+			posts,
+			totalPosts,
+		};
+	}
+);
 
-export async function fetchTopPosts(
-	skip: number = 0,
-	take: number = 10
-): Promise<PostsWithPagination> {
-	const [posts, totalPosts] = await Promise.all([
-		db.post.findMany({
-			take,
-			skip,
-			orderBy: [{ comments: { _count: 'desc' } }],
-			include: {
-				topic: { select: { slug: true } },
-				user: { select: { name: true, image: true } },
-				_count: { select: { comments: true } },
-			},
-		}),
-		db.post.count(),
-	]);
+export const fetchTopPosts = cache(
+	async (skip: number = 0, take: number = 10): Promise<PostsWithPagination> => {
+		const [posts, totalPosts] = await Promise.all([
+			db.post.findMany({
+				take,
+				skip,
+				orderBy: [{ comments: { _count: 'desc' } }],
+				include: {
+					topic: { select: { slug: true } },
+					user: { select: { name: true, image: true } },
+					_count: { select: { comments: true } },
+				},
+			}),
+			db.post.count(),
+		]);
 
-	return {
-		posts,
-		totalPosts,
-	};
-}
+		return {
+			posts,
+			totalPosts,
+		};
+	}
+);
