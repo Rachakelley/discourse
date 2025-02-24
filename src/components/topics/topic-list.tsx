@@ -23,7 +23,7 @@ export default function TopicList({ topics }: TopicListProps) {
 				>
 					<UserAvatar
 						className='mr-4'
-						fallback={<CommandLineIcon />}
+						fallback={<CommandLineIcon className='size-8' />}
 						alt={`Topic Icon for ${topic.slug}`}
 						size='sm'
 					/>

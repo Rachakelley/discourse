@@ -63,9 +63,7 @@ export default function SearchTabs({
 			<Tabs
 				aria-label='Options'
 				color='success'
-				classNames={{
-					cursor: 'w-full bg-[#35d0006e]',
-				}}
+				variant='underlined'
 				selectedKey={selectedTab}
 				onSelectionChange={(key) => handleTabChange(key.toString())}
 				className='flex flex-col md:flex-row'

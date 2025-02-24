@@ -21,8 +21,18 @@ export default function UserAvatar({
 			src={src}
 			alt={alt}
 			size={size}
-			className={className}
-			fallback={fallback ? fallback : <FaceSmileIcon className='size-8' />}
+			className={`${className} flex-shrink-0`}
+			fallback={
+				fallback ? (
+					fallback
+				) : (
+					<FaceSmileIcon
+						className='size-8 flex-shrink-0'
+						width={32}
+						height={32}
+					/>
+				)
+			}
 		/>
 	);
 }
