@@ -1,16 +1,17 @@
 'use client';
 
+import { Pagination } from '@heroui/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { TopicForListDisplay } from '@/db/queries/topics';
 import TopicList from './topic-list';
-import { Pagination } from '@heroui/react';
+import { Context } from '@/types';
 
 interface PaginatedTopicListProps {
 	topics: TopicForListDisplay[];
 	currentPage: number;
 	totalPages: number;
 	baseUrl?: string;
-	context?: 'search' | 'topic';
+	context?: Context;
 }
 
 export default function PaginatedTopicList({
@@ -26,7 +27,7 @@ export default function PaginatedTopicList({
 	const handlePageChange = (page: number) => {
 		const params = new URLSearchParams(searchParams);
 
-		if (context === 'search') {
+		if (context === Context.Search) {
 			params.set('tab', 'topics');
 		}
 

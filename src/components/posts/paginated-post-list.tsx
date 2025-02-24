@@ -2,6 +2,8 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { PostForListDisplay } from '@/db/queries/posts';
+import paths from '@/paths';
+import { Context } from '@/types';
 import PostList from './post-list';
 
 interface PaginatedPostListProps {
@@ -10,7 +12,7 @@ interface PaginatedPostListProps {
 	currentPage: number;
 	totalPages: number;
 	baseUrl?: string;
-	context?: 'home' | 'search' | 'profile' | 'topic';
+	context?: Context;
 }
 
 export default function PaginatedPostList({
@@ -27,13 +29,13 @@ export default function PaginatedPostList({
 	const handlePageChange = (page: number) => {
 		const params = new URLSearchParams(searchParams);
 
-		if (context === 'search' || context === 'profile') {
+		if (context === Context.Search || context === Context.Profile) {
 			params.set('tab', 'posts');
 		}
 
 		params.set('page', page.toString());
 
-		const path = baseUrl ? baseUrl.split('?')[0] : `/topics/${slug}`;
+		const path = baseUrl ? baseUrl.split('?')[0] : paths.topicShow(slug || '');
 		const queryString = params.toString();
 		const separator = queryString ? '?' : '';
 
@@ -46,6 +48,7 @@ export default function PaginatedPostList({
 			currentPage={currentPage}
 			totalPages={totalPages}
 			onPageChange={handlePageChange}
+			context={context}
 		/>
 	);
 }

@@ -1,6 +1,7 @@
 import { cache } from 'react';
 import type { Post } from '@prisma/client';
 import { db } from '@/db';
+import { SortOption } from '@/types';
 
 export type PostForListDisplay = Post & {
 	topic: { slug: string };
@@ -134,8 +135,22 @@ export const fetchPostsByTopicSlug = cache(
 	async (
 		slug: string,
 		skip: number = 0,
-		take: number = 10
+		take: number = 10,
+		sort: SortOption = 'recent'
 	): Promise<PostsWithPagination> => {
+		const sortOptions: {
+			[key: string]: {
+				createdAt?: 'asc' | 'desc';
+				comments?: {
+					_count: 'asc' | 'desc';
+				};
+			}[];
+		} = {
+			recent: [{ createdAt: 'desc' }],
+			oldest: [{ createdAt: 'asc' }],
+			popular: [{ comments: { _count: 'desc' } }, { createdAt: 'desc' }],
+		};
+
 		const [posts, totalPosts] = await Promise.all([
 			db.post.findMany({
 				where: { topic: { slug } },
@@ -144,7 +159,7 @@ export const fetchPostsByTopicSlug = cache(
 					user: { select: { name: true, image: true } },
 					_count: { select: { comments: true } },
 				},
-				orderBy: { createdAt: 'desc' },
+				orderBy: sortOptions[sort],
 				skip,
 				take,
 			}),
@@ -160,13 +175,30 @@ export const fetchPostsByTopicSlug = cache(
 	}
 );
 
-export const fetchTopPosts = cache(
-	async (skip: number = 0, take: number = 10): Promise<PostsWithPagination> => {
+export const fetchPostsBySortSelection = cache(
+	async (
+		skip: number = 0,
+		take: number = 10,
+		sort: SortOption = 'popular'
+	): Promise<PostsWithPagination> => {
+		const sortOptions: {
+			[key: string]: {
+				createdAt?: 'asc' | 'desc';
+				comments?: {
+					_count: 'asc' | 'desc';
+				};
+			}[];
+		} = {
+			recent: [{ createdAt: 'desc' }],
+			oldest: [{ createdAt: 'asc' }],
+			popular: [{ comments: { _count: 'desc' } }, { createdAt: 'desc' }],
+		};
+
 		const [posts, totalPosts] = await Promise.all([
 			db.post.findMany({
 				take,
 				skip,
-				orderBy: [{ comments: { _count: 'desc' } }],
+				orderBy: sortOptions[sort],
 				include: {
 					topic: { select: { slug: true } },
 					user: { select: { name: true, image: true } },

@@ -1,16 +1,18 @@
 import { format } from 'timeago.js';
 import Link from 'next/link';
 import { Pagination } from '@heroui/react';
+import { ChatBubbleOvalLeftIcon } from '@heroicons/react/24/outline';
 import paths from '@/paths';
+import { Context } from '@/types';
 import type { PostForListDisplay } from '@/db/queries/posts';
 import UserAvatar from '@/components/common/user-avatar';
-import { ChatBubbleOvalLeftIcon } from '@heroicons/react/24/outline';
 
 interface PostListProps {
 	posts: PostForListDisplay[];
 	currentPage: number;
 	totalPages: number;
 	onPageChange: (page: number) => void;
+	context?: Context;
 }
 
 export default function PostList({
@@ -18,6 +20,7 @@ export default function PostList({
 	currentPage,
 	totalPages,
 	onPageChange,
+	context,
 }: PostListProps) {
 	if (!Array.isArray(posts) || posts.length === 0) {
 		return <h4 className='p-4'>No posts found</h4>;
@@ -51,6 +54,12 @@ export default function PostList({
 							<p className='text-xs text-gray-400'>
 								Posted {post.createdAt ? format(new Date(post.createdAt)) : ''}
 							</p>
+							{context === Context.Home && (
+								<>
+									<p className='text-xs text-gray-400 flex items-center'>•</p>
+									<p className='text-xs text-gray-400'>{post.topic.slug}</p>
+								</>
+							)}
 						</div>
 						<div className='flex items-center bg-gray-200 gap-1 border rounded-full py-1 px-2 w-max'>
 							<ChatBubbleOvalLeftIcon className='size-4' />

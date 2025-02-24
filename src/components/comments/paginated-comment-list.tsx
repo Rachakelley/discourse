@@ -3,6 +3,7 @@
 import { Pagination } from '@heroui/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CommentWithAuthor } from '@/db/queries/comments';
+import { Context } from '@/types';
 import CommentListProfileTab from './comment-list-profile-tab';
 
 interface PaginatedCommentListProps {
@@ -10,7 +11,7 @@ interface PaginatedCommentListProps {
 	currentPage: number;
 	totalPages: number;
 	baseUrl?: string;
-	context?: 'search' | 'profile';
+	context?: Context;
 }
 
 export default function PaginatedCommentList({
@@ -26,7 +27,7 @@ export default function PaginatedCommentList({
 	const handlePageChange = (page: number) => {
 		const params = new URLSearchParams(searchParams);
 
-		if (context === 'search') {
+		if (context === Context.Search) {
 			params.set('tab', 'comments');
 		}
 

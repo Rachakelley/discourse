@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState, lazy, Suspense } from 'react';
+import { useRouter } from 'next/navigation';
 import { Divider, Skeleton, Tab, Tabs } from '@heroui/react';
 import { PostForListDisplay } from '@/db/queries/posts';
 import { CommentWithAuthor } from '@/db/queries/comments';
 import paths from '@/paths';
-import { useRouter } from 'next/navigation';
+import { Context } from '@/types';
 
 const PaginatedCommentList = lazy(
 	() => import('@/components/comments/paginated-comment-list')
@@ -79,7 +80,7 @@ export default function ProfileTabs({
 							currentPage={currentPage}
 							totalPages={totalPagesOfPosts}
 							baseUrl={`${paths.userProfileShow(userId)}?`}
-							context='profile'
+							context={Context.Profile}
 						/>
 					</Suspense>
 				)}
@@ -90,7 +91,7 @@ export default function ProfileTabs({
 							currentPage={currentPage}
 							totalPages={totalPagesOfComments}
 							baseUrl={`${paths.userProfileShow(userId)}?`}
-							context='profile'
+							context={Context.Profile}
 						/>
 					</Suspense>
 				)}

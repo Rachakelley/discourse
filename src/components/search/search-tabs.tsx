@@ -12,6 +12,7 @@ import { PostForListDisplay } from '@/db/queries/posts';
 import { TopicForListDisplay } from '@/db/queries/topics';
 import { UserForListDisplay } from '@/db/queries/users';
 import paths from '@/paths';
+import { Context } from '@/types';
 
 const PaginatedPostList = lazy(
 	() => import('@/components/posts/paginated-post-list')
@@ -127,7 +128,7 @@ export default function SearchTabs({
 							currentPage={currentPage}
 							totalPages={totalPagesOfPosts}
 							baseUrl={`${paths.searchTerm(searchTerm)}&`}
-							context='search'
+							context={Context.Search}
 						/>
 					</Suspense>
 				)}
@@ -138,7 +139,7 @@ export default function SearchTabs({
 							currentPage={currentPage}
 							totalPages={totalPagesOfTopics}
 							baseUrl={`${paths.searchTerm(searchTerm)}&`}
-							context='search'
+							context={Context.Search}
 						/>
 					</Suspense>
 				)}

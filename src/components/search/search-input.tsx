@@ -3,6 +3,7 @@
 import { Input } from '@heroui/react';
 import { useSearchParams } from 'next/navigation';
 import * as actions from '@/actions';
+import { Context } from '@/types';
 import { SearchIcon } from '@/components/common/icons';
 
 export default function SearchInput() {
@@ -22,7 +23,7 @@ export default function SearchInput() {
 				placeholder='Type to search...'
 				size='sm'
 				startContent={<SearchIcon size={18} />}
-				type='search'
+				type={Context.Search}
 			/>
 		</form>
 	);
