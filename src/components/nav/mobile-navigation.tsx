@@ -42,7 +42,7 @@ export default function MobileNavigation({ topics }: MobileNavigationProps) {
 	};
 
 	return (
-		<div className='z-50 flex items-center w-full h-14 px-4 fixed md:hidden bg-white border-b border-stone-200 shadow-md'>
+		<div className='flex items-center w-full h-14 px-4 fixed md:hidden bg-white border-b border-stone-200 shadow-md'>
 			<button
 				type='button'
 				aria-label='Open navigation menu'

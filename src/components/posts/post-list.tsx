@@ -36,8 +36,8 @@ export default function PostList({
 				key={post.id}
 				className='flex items-center p-4 hover:bg-gray-100 transition border rounded border-gray-200'
 			>
-				<div className='flex flex-col gap-2'>
-					<div className='flex flex-row'>
+				<div className='flex flex-col gap-2 w-full'>
+					<div className='flex flex-row justify-between'>
 						<div className='flex items-center gap-2'>
 							<div className='flex-shrink-0'>
 								<UserAvatar
@@ -51,10 +51,10 @@ export default function PostList({
 							<p className='text-xs text-gray-400'>
 								Posted {post.createdAt ? format(new Date(post.createdAt)) : ''}
 							</p>
-							<div className='flex items-center bg-gray-200 gap-1 border rounded-full py-1 px-2 w-max'>
-								<ChatBubbleOvalLeftIcon className='size-4' />
-								<p className='text-xs'>{post._count.comments}</p>
-							</div>
+						</div>
+						<div className='flex items-center bg-gray-200 gap-1 border rounded-full py-1 px-2 w-max'>
+							<ChatBubbleOvalLeftIcon className='size-4' />
+							<p className='text-xs'>{post._count.comments}</p>
 						</div>
 					</div>
 					<h3 className='text-md font-bold'>{post.title}</h3>
@@ -65,7 +65,9 @@ export default function PostList({
 
 	return (
 		<div className='space-y-4'>
-			<div className='space-y-2'>{renderedPosts}</div>
+			<div className='space-y-2 bg-white border border-white rounded-lg p-5'>
+				{renderedPosts}
+			</div>
 			<div className='flex justify-center'>
 				<Pagination
 					className='m-0'

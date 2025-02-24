@@ -15,10 +15,10 @@ interface ListboxWrapperProps {
 
 export const ListboxWrapper = ({ children }: ListboxWrapperProps) => (
 	/* 
-        On small screens less than 768px The navbar is hidden (display: none)
-        On medium screens and larger ≥ 768px The navbar is visible (display: block)
-    */
-	<div className='w-64 fixed left-0 top-[64px] h-[calc(100vh-64px)] border-r border-stone-200 bg-white hidden md:block overflow-y-auto'>
+		On small screens less than 768px The navbar is hidden (display: none)
+		On medium screens and larger ≥ 768px The navbar is visible (display: block)
+	*/
+	<div className='w-80 fixed left-0 top-[64px] h-[calc(100vh-64px)] border-r border-stone-200 bg-white hidden md:block overflow-y-auto'>
 		{children}
 	</div>
 );

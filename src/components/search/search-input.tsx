@@ -13,7 +13,7 @@ export default function SearchInput() {
 			<Input
 				name='term'
 				classNames={{
-					base: 'max-w-full sm:max-w-[20rem] h-10',
+					base: 'max-w-full w-full sm:max-w-[20rem] h-10',
 					mainWrapper: 'h-full',
 					input: 'text-small',
 					inputWrapper: 'h-full font-normal text-green-500 bg-default-400/20',

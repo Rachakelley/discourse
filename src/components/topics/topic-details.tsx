@@ -18,10 +18,10 @@ export default function TopicDetails({
 	slug,
 }: TopicDetailsProps) {
 	return (
-		<div className='h-fit col-span-2 rounded-lg border rounded border-gray-200'>
+		<div className='h-fit col-span-2 rounded-lg border rounded border-gray-200 p-2'>
 			<div className='py-2 px-4'>
 				<p className='text-md font-bold'>{slug}</p>
-				<p className='text-sm text-gray-500'>{description}</p>
+				<p className='text-sm text-gray-500 mb-6'>{description}</p>
 				<div className='flex flex-row items-center text-gray-500 gap-2 pt-2'>
 					<FolderPlusIcon className='size-4' />
 					<p className='text-sm'>
