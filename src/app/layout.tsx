@@ -17,7 +17,7 @@ export default function RootLayout({
 							<Header />
 							<NavigationWrapper />
 						</div>
-						<main className='ml-0 md:ml-64 flex-1 flex justify-center'>
+						<main className='ml-0 md:ml-80 flex-1 flex justify-center'>
 							<div className='container px-6 md:py-4 max-w-4xl mt-[8.5rem] md:mt-[4rem]'>
 								{children}
 							</div>

@@ -23,7 +23,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 	const totalPages = Math.ceil(totalPosts / postsPerPage);
 
 	return (
-		<div className='flex flex-col justify-between w-[75vw] md:w-[55vw] mx-auto'>
+		<div className='flex flex-col justify-between mx-auto'>
 			<div className='flex justify-between'>
 				<h1 className='text-xl m-2'>Top Posts</h1>
 				<div className='flex gap-2 px-2 min-w-fit'>
