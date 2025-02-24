@@ -30,7 +30,7 @@ export default async function TopicShowPage({
 	return (
 		<>
 			<h1 className='text-2xl mb-1 hidden md:block'>{slug}</h1>
-			<div className='flex flex-col gap-12 md:grid md:grid-cols-6'>
+			<div className='flex flex-col gap-4 md:gap-6 lg:gap-12 md:grid md:grid-cols-6'>
 				<div className='order-2 md:order-1 md:col-span-4'>
 					<Suspense fallback={<PostListLoading />}>
 						<AsyncPostList

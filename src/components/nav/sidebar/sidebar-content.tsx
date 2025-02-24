@@ -18,7 +18,10 @@ export const ListboxWrapper = ({ children }: ListboxWrapperProps) => (
 		On small screens less than 768px The navbar is hidden (display: none)
 		On medium screens and larger ≥ 768px The navbar is visible (display: block)
 	*/
-	<div className='w-80 fixed left-0 top-[64px] h-[calc(100vh-64px)] border-r border-stone-200 bg-white hidden md:block overflow-y-auto'>
+	<div
+		className='fixed left-0 top-[64px] h-[calc(100vh-64px)] border-r border-stone-200 bg-white hidden md:block overflow-y-auto
+    md:w-60 lg:w-72 xl:w-80'
+	>
 		{children}
 	</div>
 );
